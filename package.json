@@ -25,6 +25,9 @@
         "@inertiajs/react": "^2.0.8",
         "@vitejs/plugin-react": "^4.4.1",
         "react": "^19.1.0",
-        "react-dom": "^19.1.0"
+        "react-countup": "^6.5.3",
+        "react-dom": "^19.1.0",
+        "react-scroll": "^1.9.3",
+        "react-slidedown": "^2.4.7"
     }
 }
