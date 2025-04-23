@@ -1,5 +1,4 @@
 import { Element } from "react-scroll";
-import { Link } from '@inertiajs/react';
 
 import { details, features } from "../constants/index.jsx";
 import Button from "../components/Button.jsx";
@@ -32,17 +31,10 @@ const Features = () => {
                   {title}
                 </h2>
                 <p className="mb-11 body-1 max-md:mb-8 max-md:body-3">{text}</p>
-                {button.title === "Read the docs" ? (
-  <Link
-    href="/lectures"
-    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-s4 text-white font-bold shadow-500 hover:bg-s3 transition"
-  >
-    <img src={button.icon} alt="" className="w-5 h-5" />
-    {button.title}
-  </Link>
-) : (
+                <a href={id === "0" ? "#" : "/lectures"}>
   <Button icon={button.icon}>{button.title}</Button>
-)}
+</a>
+
 
               </div>
             ))}

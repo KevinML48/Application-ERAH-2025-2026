@@ -21,13 +21,25 @@ const Hero = () => {
             </LinkScroll>
           </div>
 
-          <div className="absolute -top-1 left-[calc(50%-240px)] w-[800px] pointer-events-none hero-img_res">
+          <div
+  className="absolute left-[calc(50%-80px)] w-[600px] pointer-events-none hero-img_res"
+  style={{ top: '140px' }}
+>
   <img
     src="/build/assets/images-welcome/hero.png"
     className="w-full h-auto"
     alt="hero"
   />
 </div>
+
+
+
+
+
+
+
+
+
         </div>
       </Element>
     </section>
