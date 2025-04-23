@@ -51,4 +51,9 @@ class User extends Authenticatable implements MustVerifyEmail // Optionnel pour 
     {
         return $this->getAllPermissions()->pluck('name');
     }
+
+    public function lectures()
+    {
+        return $this->hasMany(Lecture::class);
+    }
 }

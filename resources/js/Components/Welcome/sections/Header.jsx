@@ -45,7 +45,7 @@ const Header = ({ auth }) => {
     >
       <div className="container flex h-14 items-center max-lg:px-5">
         <a className="lg:hidden flex-1 cursor-pointer z-2">
-          <img src="/build/assets/images-welcome/xora.svg" width={115} height={55} alt="logo" />
+          <img src="/build/assets/images-welcome/logo-erah.png" width={115} height={55} alt="logo" />
         </a>
 
         <div
@@ -74,8 +74,8 @@ const Header = ({ auth }) => {
                     )}
                   >
                     <img
-                      src="/build/assets/images-welcome/xora.svg"
-                      width={160}
+                      src="/build/assets/images-welcome/logo-erah.png"
+                      width={200}
                       height={55}
                       alt="logo"
                     />
