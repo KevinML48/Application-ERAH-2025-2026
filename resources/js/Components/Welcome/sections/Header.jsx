@@ -1,8 +1,9 @@
 import { Link as LinkScroll } from "react-scroll";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
+import { Link } from "@inertiajs/react"; // Inertia.js
 
-const Header = () => {
+const Header = ({ auth }) => {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -17,6 +18,9 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  // Debug : affiche la prop auth dans la console à chaque rendu
+  // console.log("Header auth prop:", auth);
 
   const NavLink = ({ title }) => (
     <LinkScroll
@@ -81,7 +85,24 @@ const Header = () => {
                 <li className="nav-li">
                   <NavLink title="faq" />
                   <div className="dot" />
-                  <NavLink title="download" />
+                  {/* Lien conditionnel connexion/profil */}
+                  {auth && auth.user ? (
+                    <Link
+                      href="/profile"
+                      className="base-bold text-p4 uppercase transition-colors duration-500 cursor-pointer hover:text-p1 max-lg:my-4 max-lg:h5"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Mon profil
+                    </Link>
+                  ) : (
+                    <Link
+                      href={route('login')}
+                      className="base-bold text-p4 uppercase transition-colors duration-500 cursor-pointer hover:text-p1 max-lg:my-4 max-lg:h5"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Se connecter
+                    </Link>
+                  )}
                 </li>
               </ul>
             </nav>
