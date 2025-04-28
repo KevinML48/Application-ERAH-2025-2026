@@ -26,24 +26,54 @@ export default function Index({ lectures }) {
   }
 
   function renderMedia(lecture) {
-    const isExternal = lecture.media_url && lecture.media_url.startsWith('http');
-    const isImage = lecture.media_url && /\.(jpg|jpeg|png|gif|webp)$/i.test(lecture.media_url);
-    const isVideo = lecture.media_url && (lecture.media_url.includes('youtube') || lecture.media_url.endsWith('.mp4'));
-
-    if (!lecture.media_url) return null;
-
+    const url = lecture.media_url;
+    if (!url) return null;
+  
+    const isExternal = url.startsWith('http');
+    const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
+    const isMp4 = url.endsWith('.mp4');
+    const youtubeId = getYouTubeId(url);
+  
     if (!isExternal) {
-      // Image locale uploadée
-      return <img src={`/storage/${lecture.media_url}`} alt={lecture.title} style={{ maxWidth: 100, borderRadius: 8, margin: "8px 0" }} />;
+      return <img src={`/storage/${url}`} alt={lecture.title} style={{ maxWidth: 100, borderRadius: 8, margin: "8px 0" }} />;
     }
     if (isImage) {
-      return <img src={lecture.media_url} alt={lecture.title} style={{ maxWidth: 100, borderRadius: 8, margin: "8px 0" }} />;
+      return <img src={url} alt={lecture.title} style={{ maxWidth: 100, borderRadius: 8, margin: "8px 0" }} />;
     }
-    if (isVideo) {
-      return <span style={{ color: "#276EF1" }}>🎬 Vidéo</span>;
+    if (youtubeId) {
+      return (
+        <div style={{ margin: "8px 0" }}>
+          <iframe
+            width="300"
+            height="170"
+            src={`https://www.youtube.com/embed/${youtubeId}`}
+            title={lecture.title}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      );
+    }
+    if (isMp4) {
+      return (
+        <video controls width={300} style={{ borderRadius: 8, margin: "8px 0" }}>
+          <source src={url} type="video/mp4" />
+          Votre navigateur ne supporte pas la vidéo.
+        </video>
+      );
     }
     return null;
   }
+  
+
+  function getYouTubeId(url) {
+    if (!url) return null;
+    // Gère les urls de type youtu.be/xxxx ou youtube.com/watch?v=xxxx
+    const regExp = /(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/))([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regExp);
+    return match ? match[1] : null;
+  }  
 
   return (
     <div style={{ maxWidth: 900, margin: "2em auto" }}>
