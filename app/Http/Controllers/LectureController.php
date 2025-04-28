@@ -5,9 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Lecture;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class LectureController extends Controller
+class LectureController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            'auth',
+            new Middleware('can:update,lecture', only: ['edit', 'update']),
+            new Middleware('can:delete,lecture', only: ['destroy']),
+        ];
+    }
+
     public function index()
     {
         // Charge la relation user pour chaque lecture

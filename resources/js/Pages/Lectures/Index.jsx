@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useForm, router } from '@inertiajs/react';
+import { Link, useForm, router, usePage } from '@inertiajs/react';
 import '../../../css/lecture.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 export default function Index({ lectures }) {
   const [visibleCount, setVisibleCount] = useState(5);
+  const { props } = usePage();
+  const permissions = props.auth?.permissions || [];
 
   const { data, setData, post, processing, errors, reset } = useForm({
     title: '',
@@ -80,9 +82,9 @@ export default function Index({ lectures }) {
 
   return (
     <div>
-      <h1>Lectures</h1>
+      
       {/* Formulaire d'ajout */}
-      <form onSubmit={submit}>
+      {/* <form onSubmit={submit}>
         <input
           value={data.title}
           onChange={e => setData('title', e.target.value)}
@@ -110,17 +112,19 @@ export default function Index({ lectures }) {
         />
         <button type="submit" disabled={processing}>Ajouter</button>
         {Object.values(errors).map((err, i) => <div key={i}>{err}</div>)}
-      </form>
+      </form> */}
 
       {/* Section Featured */}
       <section className="section feature" aria-label="feature" id="featured">
         <div className="container">
-          <h2 className="headline headline-2 section-title">
-            <span className="span">Editor's picked</span>
-          </h2>
-          <p className="section-text">
-            Featured and highly rated articles
-          </p>
+        <h2 className="headline headline-2 section-title text-center text-gray-800 font-extrabold text-4xl">
+  <span className="span text-primary font-extrabold">Blog - ERAH</span>
+</h2>
+<p className="section-text text-center text-gray-700 text-lg mt-3">
+  Découvrez nos dernières publications et vidéos sur l'actualité de l'ERAH, les événements à venir et bien plus encore !
+</p>
+
+
           <ul className="feature-list">
             {lectures.slice(0, visibleCount).map(lecture => (
               <li key={lecture.id}>
@@ -166,14 +170,34 @@ export default function Index({ lectures }) {
                           </p>
                         </div>
                       </div>
-                      <Link
-                        href={route('lectures.show', lecture.id)}
-                        className="card-btn"
-                        style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
-                      >
-                        Lecture
-                        <FontAwesomeIcon icon={faArrowRight} />
-                      </Link>
+                      <div className="flex items-center gap-2 mt-2 flex-wrap">
+  <Link
+    href={route('lectures.show', lecture.id)}
+    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+  >
+    Lecture
+    <FontAwesomeIcon icon={faArrowRight} />
+  </Link>
+  {permissions.includes('manage users') && (
+  <Link
+    href={route('lectures.edit', lecture.id)}
+    className="inline-flex items-center px-3 py-1.5 bg-yellow-400 text-yellow-900 rounded hover:bg-yellow-500 transition text-sm font-semibold"
+  >
+    Modifier
+  </Link>
+)}
+
+{permissions.includes('manage users') && (
+  <button
+    type="button"
+    className="inline-flex items-center px-3 py-1.5 bg-red-600 text-white rounded hover:bg-red-700 transition text-sm font-semibold"
+    onClick={() => handleDelete(lecture.id)}
+  >
+    Supprimer
+  </button>
+)}
+</div>
+
                     </div>
                   </div>
                 </div>
