@@ -1,6 +1,12 @@
+import React, { useState } from 'react';
 import { Link, useForm, router } from '@inertiajs/react';
+import '../../../css/lecture.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 export default function Index({ lectures }) {
+  const [visibleCount, setVisibleCount] = useState(5);
+
   const { data, setData, post, processing, errors, reset } = useForm({
     title: '',
     media_url: '',
@@ -18,46 +24,52 @@ export default function Index({ lectures }) {
   }
 
   function handleDelete(id) {
-    if (confirm('Supprimer ?')) {
+    if (confirm('Supprimer ?')) {
       router.delete(route('lectures.destroy', id), {
         preserveScroll: true,
       });
     }
   }
 
+  function getYouTubeId(url) {
+    if (!url) return null;
+    const regExp = /(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/))([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regExp);
+    return match ? match[1] : null;
+  }
+
   function renderMedia(lecture) {
     const url = lecture.media_url;
     if (!url) return null;
-  
+
     const isExternal = url.startsWith('http');
     const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
     const isMp4 = url.endsWith('.mp4');
     const youtubeId = getYouTubeId(url);
-  
+
     if (!isExternal) {
-      return <img src={`/storage/${url}`} alt={lecture.title} style={{ maxWidth: 100, borderRadius: 8, margin: "8px 0" }} />;
+      return <img src={`/storage/${url}`} alt={lecture.title} className="img-cover" />;
     }
     if (isImage) {
-      return <img src={url} alt={lecture.title} style={{ maxWidth: 100, borderRadius: 8, margin: "8px 0" }} />;
+      return <img src={url} alt={lecture.title} className="img-cover" />;
     }
     if (youtubeId) {
       return (
-        <div style={{ margin: "8px 0" }}>
+        <div className="media-responsive">
           <iframe
-            width="300"
-            height="170"
             src={`https://www.youtube.com/embed/${youtubeId}`}
             title={lecture.title}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            className="media-iframe"
           />
         </div>
       );
     }
     if (isMp4) {
       return (
-        <video controls width={300} style={{ borderRadius: 8, margin: "8px 0" }}>
+        <video controls width={300}>
           <source src={url} type="video/mp4" />
           Votre navigateur ne supporte pas la vidéo.
         </video>
@@ -65,21 +77,12 @@ export default function Index({ lectures }) {
     }
     return null;
   }
-  
-
-  function getYouTubeId(url) {
-    if (!url) return null;
-    // Gère les urls de type youtu.be/xxxx ou youtube.com/watch?v=xxxx
-    const regExp = /(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/))([a-zA-Z0-9_-]{11})/;
-    const match = url.match(regExp);
-    return match ? match[1] : null;
-  }  
 
   return (
-    <div style={{ maxWidth: 900, margin: "2em auto" }}>
+    <div>
       <h1>Lectures</h1>
       {/* Formulaire d'ajout */}
-      <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 30 }}>
+      <form onSubmit={submit}>
         <input
           value={data.title}
           onChange={e => setData('title', e.target.value)}
@@ -106,32 +109,88 @@ export default function Index({ lectures }) {
           onChange={e => setData('published_at', e.target.value)}
         />
         <button type="submit" disabled={processing}>Ajouter</button>
-        {Object.values(errors).map((err, i) => <div key={i} style={{ color: "red" }}>{err}</div>)}
+        {Object.values(errors).map((err, i) => <div key={i}>{err}</div>)}
       </form>
 
-      {/* Liste des lectures */}
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {lectures.map(lecture => (
-          <li key={lecture.id} style={{ marginBottom: 24, padding: 16, border: "1px solid #eee", borderRadius: 12 }}>
-            <Link href={route('lectures.show', lecture.id)} style={{ fontWeight: "bold", fontSize: "1.1em" }}>
-              {lecture.title}
-            </Link>
-            <div style={{ color: "#888" }}>
-              par {lecture.user?.name || "Inconnu"} le {lecture.published_at ? new Date(lecture.published_at).toLocaleDateString() : ''}
-            </div>
-            {renderMedia(lecture)}
-            <div style={{ margin: "8px 0" }}>{lecture.description?.slice(0, 120)}...</div>
-            <Link href={route('lectures.edit', lecture.id)} style={{ marginRight: 10 }}>✏️</Link>
+      {/* Section Featured */}
+      <section className="section feature" aria-label="feature" id="featured">
+        <div className="container">
+          <h2 className="headline headline-2 section-title">
+            <span className="span">Editor's picked</span>
+          </h2>
+          <p className="section-text">
+            Featured and highly rated articles
+          </p>
+          <ul className="feature-list">
+            {lectures.slice(0, visibleCount).map(lecture => (
+              <li key={lecture.id}>
+                <div className="card feature-card">
+                  <figure className="card-banner img-holder" style={{ "--width": 1602, "--height": 903 }}>
+                    {renderMedia(lecture) ||
+                      <img
+                        src="./assets/images/featured-1.png"
+                        width="1602"
+                        height="903"
+                        loading="lazy"
+                        alt={lecture.title}
+                        className="img-cover"
+                      />
+                    }
+                  </figure>
+                  <div className="card-content">
+                    <div className="card-wrapper">
+                      <div className="wrapper">
+                        <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
+                        <span className="span">
+                          {lecture.published_at
+                            ? `Publié le ${new Date(lecture.published_at).toLocaleDateString('fr-FR', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}`
+                            : "Date inconnue"}
+                        </span>
+                      </div>
+                    </div>
+                    <h3 className="headline headline-3">
+                      <Link href={route('lectures.show', lecture.id)} className="card-title hover-2">
+                        {lecture.title}
+                      </Link>
+                    </h3>
+                    <div className="card-wrapper">
+                      <div className="profile-card">
+                        <div>
+                          <p className="card-title">{lecture.user?.name || "Inconnu"}</p>
+                          <p className="card-subtitle">
+                            {lecture.published_at ? new Date(lecture.published_at).toLocaleDateString('fr-FR') : ''}
+                          </p>
+                        </div>
+                      </div>
+                      <Link
+                        href={route('lectures.show', lecture.id)}
+                        className="card-btn"
+                        style={{ display: 'flex', alignItems: 'center', gap: '7px' }}
+                      >
+                        Lecture
+                        <FontAwesomeIcon icon={faArrowRight} />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+          {visibleCount < lectures.length && (
             <button
               type="button"
-              onClick={() => handleDelete(lecture.id)}
-              style={{ color: 'red', background: 'none', border: 'none', cursor: 'pointer' }}
+              className="btn btn-secondary"
+              onClick={() => setVisibleCount(visibleCount + 5)}
             >
-              🗑️
+              <span className="span">Découvrir</span>
             </button>
-          </li>
-        ))}
-      </ul>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

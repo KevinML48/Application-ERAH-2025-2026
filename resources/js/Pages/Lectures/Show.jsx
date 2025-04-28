@@ -1,123 +1,160 @@
-import { useForm, Link } from '@inertiajs/react';
+import React from 'react';
+import { Link } from '@inertiajs/react';
 
-export default function Edit({ lecture, user }) {
-  const { data, setData, put, processing, errors } = useForm({
-    title: lecture.title || '',
-    media_url: lecture.media_url && lecture.media_url.startsWith('http') ? lecture.media_url : '',
-    description: lecture.description || '',
-    published_at: lecture.published_at ? lecture.published_at.substring(0, 10) : '',
-    image: null, // Pour nouvel upload
-  });
+function getYouTubeId(url) {
+  if (!url) return null;
+  const regExp = /(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/))([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regExp);
+  return match ? match[1] : null;
+}
 
-  function submit(e) {
-    e.preventDefault();
-    put(route('lectures.update', lecture.id), {
-      forceFormData: true,
-    });
+export default function Show({ lecture }) {
+  const url = lecture.media_url;
+  const isExternal = url?.startsWith('http');
+  const isImage = url && /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
+  const isMp4 = url && url.endsWith('.mp4');
+  const youtubeId = getYouTubeId(url);
+
+  let media;
+  if (youtubeId) {
+    media = (
+      <div style={{
+        position: 'relative',
+        paddingBottom: '56.25%', // 16:9 ratio
+        height: 0,
+        margin: '32px 0',
+        boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+        borderRadius: 12,
+        overflow: 'hidden',
+      }}>
+        <iframe
+          src={`https://www.youtube.com/embed/${youtubeId}`}
+          title={lecture.title}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          style={{
+            position: 'absolute',
+            top: 0, left: 0, width: '100%', height: '100%',
+            borderRadius: 12,
+          }}
+        />
+      </div>
+    );
+  } else if (isMp4) {
+    media = (
+      <video
+        controls
+        style={{
+          width: '100%',
+          borderRadius: 12,
+          margin: '32px 0',
+          boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+          backgroundColor: '#000',
+        }}
+      >
+        <source src={isExternal ? url : '/storage/' + url} type="video/mp4" />
+        Votre navigateur ne supporte pas la vidéo.
+      </video>
+    );
+  } else if (isImage) {
+    media = (
+      <img
+        src={isExternal ? url : '/storage/' + url}
+        alt={lecture.title}
+        style={{
+          width: '100%',
+          borderRadius: 12,
+          margin: '32px 0',
+          boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+          objectFit: 'cover',
+          backgroundColor: '#f8f8f8',
+        }}
+      />
+    );
+  } else {
+    media = null;
   }
 
-  // Affichage du média actuel
-  const isExternal = lecture.media_url && lecture.media_url.startsWith('http');
-  const isImage = lecture.media_url && /\.(jpg|jpeg|png|gif|webp)$/i.test(lecture.media_url);
-  const isVideo = lecture.media_url && (lecture.media_url.includes('youtube') || lecture.media_url.endsWith('.mp4'));
-
   return (
-    <div style={{ maxWidth: 600, margin: "2em auto" }}>
-      <Link href={route('lectures.index')} style={{ display: "inline-block", marginBottom: 20 }}>
+    <div style={{
+      maxWidth: '900px',
+      margin: '40px auto',
+      padding: '20px',
+      backgroundColor: '#fff',
+      borderRadius: 16,
+      boxShadow: '0 10px 36px rgba(0,0,0,0.12)',
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      color: '#222',
+      lineHeight: 1.6,
+      boxSizing: 'border-box',
+    }}>
+      <Link
+        href={route('lectures.index')}
+        style={{
+          display: 'inline-block',
+          fontSize: 16,
+          marginBottom: 24,
+          textDecoration: 'none',
+          color: '#0066cc',
+          fontWeight: 600,
+          transition: 'color 0.3s ease',
+        }}
+        onMouseEnter={e => e.currentTarget.style.color = '#004a99'}
+        onMouseLeave={e => e.currentTarget.style.color = '#0066cc'}
+      >
         ← Retour à la liste
       </Link>
-      <h2>Modifier la lecture</h2>
-      <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <label>
-          Titre
-          <input
-            type="text"
-            value={data.title}
-            onChange={e => setData('title', e.target.value)}
-            className={errors.title ? "input-error" : ""}
-          />
-          {errors.title && <div className="error">{errors.title}</div>}
-        </label>
 
-        <label>
-          URL vidéo (YouTube, mp4...) OU image externe
-          <input
-            type="text"
-            value={data.media_url}
-            onChange={e => setData('media_url', e.target.value)}
-            className={errors.media_url ? "input-error" : ""}
-            placeholder="Laisse vide pour garder ou remplacer par un upload"
-          />
-          {errors.media_url && <div className="error">{errors.media_url}</div>}
-        </label>
+      <h1 style={{
+        fontSize: 'clamp(24px, 5vw, 36px)', // 🔥 Adaptatif pour mobile
+        fontWeight: 'bold',
+        marginBottom: 16,
+        color: '#111',
+      }}>
+        {lecture.title}
+      </h1>
 
-        <label>
-          Image (upload)
-          <input
-            type="file"
-            accept="image/*"
-            onChange={e => setData('image', e.target.files[0])}
-          />
-          {errors.image && <div className="error">{errors.image}</div>}
-        </label>
+      {media}
 
-        {/* Affichage du média actuel */}
-        {lecture.media_url && (
-          <div>
-            {!isExternal && (
-              <img src={`/storage/${lecture.media_url}`} alt="Image actuelle" style={{ maxWidth: '200px', margin: '1em 0', borderRadius: 8 }} />
-            )}
-            {isExternal && isImage && (
-              <img src={lecture.media_url} alt="Image actuelle" style={{ maxWidth: '200px', margin: '1em 0', borderRadius: 8 }} />
-            )}
-            {isExternal && isVideo && (
-              lecture.media_url.includes('youtube') ? (
-                <iframe
-                  width="300"
-                  height="170"
-                  src={lecture.media_url.replace("watch?v=", "embed/")}
-                  frameBorder="0"
-                  allowFullScreen
-                  title="Vidéo"
-                  style={{ margin: '1em 0', borderRadius: 8 }}
-                />
-              ) : (
-                <video controls width="300" src={lecture.media_url} style={{ margin: '1em 0', borderRadius: 8 }} />
-              )
-            )}
-          </div>
+      <div style={{
+        fontSize: 'clamp(16px, 4vw, 20px)', // 🔥 Adaptatif pour mobile
+        color: '#374151',
+        marginBottom: 36,
+        lineHeight: 1.8,
+        whiteSpace: 'pre-line',  // 🔥 Respecte \n dans la description
+        wordBreak: 'break-word', // 🔥 Coupe proprement les mots
+      }}>
+        {lecture.description}
+      </div>
+
+      <div style={{
+        color: '#666',
+        fontSize: 'clamp(12px, 2.5vw, 14px)', // 🔥 Adaptatif pour mobile
+        borderTop: '1px solid #eee',
+        paddingTop: 12,
+        display: 'flex',
+        flexDirection: 'column', // 🔥 En colonne pour petits écrans
+        gap: 8,
+        alignItems: 'flex-start',
+      }}>
+        <span>
+          Publié le&nbsp;
+          {lecture.published_at
+            ? new Date(lecture.published_at).toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })
+            : 'Date non précisée'
+          }
+        </span>
+        {lecture.user && (
+          <span style={{ fontStyle: 'italic', fontWeight: 600 }}>
+            Par {lecture.user.name}
+          </span>
         )}
-
-        <label>
-          Description
-          <textarea
-            value={data.description}
-            onChange={e => setData('description', e.target.value)}
-            className={errors.description ? "input-error" : ""}
-            rows={5}
-          />
-          {errors.description && <div className="error">{errors.description}</div>}
-        </label>
-
-        <label>
-          Date de publication
-          <input
-            type="date"
-            value={data.published_at}
-            onChange={e => setData('published_at', e.target.value)}
-            className={errors.published_at ? "input-error" : ""}
-          />
-          {errors.published_at && <div className="error">{errors.published_at}</div>}
-        </label>
-
-        <div>
-          <strong>Auteur :</strong> {lecture.user?.name || user?.name || 'N/A'}
-        </div>
-
-        <button type="submit" disabled={processing} style={{ marginTop: 20 }}>
-          Enregistrer les modifications
-        </button>
-      </form>
+      </div>
     </div>
   );
 }
