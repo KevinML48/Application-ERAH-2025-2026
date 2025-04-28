@@ -1,26 +1,26 @@
 export const features = [
   {
     id: "0",
-    icon: "/build/assets/images-welcome/feature-1.png", // Chemin corrigé
-    caption: "Easy integration",
-    title: "Work smarter not harder",
-    text: "With Xora, tedious tasks are history. Automation and smart processes bring your productivity to new heights. It's like having an extra cup of coffee, but without the jitters.",
+    icon: "/build/assets/images-welcome/feature-1.png",
+    caption: "Démonstration en vidéo",
+    title: "Découvrez ERAH Esport en quelques minutes",
+    text: "Regardez notre vidéo explicative pour comprendre rapidement comment utiliser la plateforme et accéder à nos offres et équipes.",
     button: {
-      icon: "/build/assets/images-welcome/magictouch.svg", // Chemin corrigé
-      title: "Watch the demo",
+      icon: "/build/assets/images-welcome/magictouch.svg",
+      title: "Voir la démo",
     },
-  },
+  },   
   {
     id: "1",
-    icon: "/build/assets/images-welcome/feature-2.png", // Chemin corrigé
-    caption: "Secure & trustworthy",
-    title: "Sleep easy, we got your back",
-    text: "Your data security is our priority. With state-of-the-art encryption and robust privacy controls, Xora helps keeps your information secure and locked up tighter than Fort Knox.",
+    icon: "/build/assets/images-welcome/feature-2.png",
+    caption: "Suivez notre parcours",
+    title: "Restez à jour avec ERAH Esport",
+    text: "Explorez notre historique, suivez nos dernières activités et découvrez les étapes clés de notre parcours. De nos premières compétitions à nos futurs projets, nous vous tenons informé à chaque étape.",
     button: {
-      icon: "/build/assets/images-welcome/docs.svg", // Chemin corrigé
-      title: "Read the docs",
+      icon: "/build/assets/images-welcome/docs.svg",
+      title: "Notre Blog",
     },
-  },
+  },  
 ];
 
 export const details = [
@@ -49,63 +49,63 @@ export const details = [
 export const faq = [
   {
     id: "0",
-    question: "How easy is it to setup Xora?",
+    question: "Comment postuler à une offre ?",
     answer:
-      "Absolutely! Not only you can upgrade your plan at any time but you also get a prorated discount giving you maximum value for your subscription.",
+      "Rendez-vous dans la section 'Offres', sélectionnez l'opportunité qui vous intéresse et remplissez le formulaire de candidature en quelques minutes.",
   },
   {
     id: "1",
-    question: "Can I integrate Xora with other platforms?",
+    question: "Faut-il créer un compte pour postuler ?",
     answer:
-      "Absolutely! Not only you can upgrade your plan at any time but you also get a prorated discount giving you maximum value for your subscription.",
+      "Non, il n'est pas nécessaire de créer un compte pour postuler. Vous pouvez déposer votre candidature directement depuis l'application.",
   },
   {
     id: "2",
-    question: "How often do you add new content?",
+    question: "Comment suivre les actualités d’ERAH Esport ?",
     answer:
-      "Absolutely! Not only you can upgrade your plan at any time but you also get a prorated discount giving you maximum value for your subscription.",
+      "Nos actualités sont disponibles directement sur la plateforme. N'hésitez pas à consulter régulièrement la page 'Actualités' pour rester informé.",
   },
   {
     id: "3",
-    question: "What your refund policy?",
+    question: "Puis-je rejoindre une équipe déjà existante ?",
     answer:
-      "Absolutely! Not only you can upgrade your plan at any time but you also get a prorated discount giving you maximum value for your subscription.",
+      "Oui, certaines équipes recrutent régulièrement. Consultez nos offres ou contactez-nous directement via la plateforme pour plus d'informations.",
   },
   {
     id: "4",
-    question: "Do you have corporate plans?",
+    question: "Comment savoir si ma candidature a été acceptée ?",
     answer:
-      "Absolutely! Not only you can upgrade your plan at any time but you also get a prorated discount giving you maximum value for your subscription.",
+      "Après avoir postulé, vous recevrez un e-mail pour vous informer de l'avancée de votre candidature. Pensez à vérifier votre boîte mail et vos spams.",
   },
   {
     id: "5",
-    question: "What happens when I’m out of storage?",
+    question: "Puis-je participer à des événements sans être membre ?",
     answer:
-      "Absolutely! Not only you can upgrade your plan at any time but you also get a prorated discount giving you maximum value for your subscription.",
+      "Certains événements sont ouverts à tous, d'autres sont réservés à nos membres. Toutes les informations sont précisées dans chaque annonce d'événement.",
   },
   {
     id: "6",
-    question: "Can I upgrade my plan?",
+    question: "Comment entrer en contact avec ERAH Esport ?",
     answer:
-      "Absolutely! Not only you can upgrade your plan at any time but you also get a prorated discount giving you maximum value for your subscription.",
+      "Vous pouvez utiliser notre formulaire de contact disponible sur la plateforme ou nous écrire directement sur nos réseaux sociaux officiels.",
   },
   {
     id: "7",
-    question: "How do I invite my team?",
+    question: "Quelles sont les conditions pour rejoindre ERAH ?",
     answer:
-      "Absolutely! Not only you can upgrade your plan at any time but you also get a prorated discount giving you maximum value for your subscription.",
+      "Chaque offre précise les critères recherchés. Nous valorisons l'engagement, l'esprit d'équipe et la passion pour l'esport.",
   },
   {
     id: "8",
-    question: "Do you offer training for individuals and teams?",
+    question: "Quels jeux sont représentés chez ERAH ?",
     answer:
-      "Absolutely! Not only you can upgrade your plan at any time but you also get a prorated discount giving you maximum value for your subscription.",
+      "Nous sommes principalement actifs sur Valorant, mais nous développons aussi d'autres sections selon l'évolution de notre projet.",
   },
   {
     id: "9",
-    question: "I’m locked out of my account what do I do?",
+    question: "L’accès à la plateforme est-il gratuit ?",
     answer:
-      "Absolutely! Not only you can upgrade your plan at any time but you also get a prorated discount giving you maximum value for your subscription.",
+      "Oui, l’accès à la plateforme est entièrement gratuit pour consulter les offres, suivre nos actualités et postuler.",
   },
 ];
 
