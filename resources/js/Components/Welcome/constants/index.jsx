@@ -26,23 +26,23 @@ export const features = [
 export const details = [
   {
     id: "0",
-    icon: "/build/assets/images-welcome/detail-1.png", // Chemin corrigé
-    title: "AI automated video editing",
+    icon: "/build/assets/images-welcome/detail-1.png",
+    title: "Consultez nos offres",
   },
   {
     id: "1",
-    icon: "/build/assets/images-welcome/detail-2.png", // Chemin corrigé
-    title: "Collaborate with your team",
+    icon: "/build/assets/images-welcome/detail-2.png",
+    title: "Suivez nos actualités",
   },
   {
     id: "2",
-    icon: "/build/assets/images-welcome/detail-3.png", // Chemin corrigé
-    title: "Ultra fast cloud-engine",
+    icon: "/build/assets/images-welcome/detail-3.png",
+    title: "Découvrez nos équipes",
   },
   {
     id: "3",
-    icon: "/build/assets/images-welcome/detail-4.png", // Chemin corrigé
-    title: "24 / 7 Customer support",
+    icon: "/build/assets/images-welcome/detail-4.png",
+    title: "Rejoignez ERAH",
   },
 ];
 
