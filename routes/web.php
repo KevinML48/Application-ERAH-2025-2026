@@ -26,8 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('offers', OfferController::class)->middleware(['auth']);
-
+// PAS DE MIDDLEWARE ICI, tout est dans les contrôleurs !
+Route::resource('offers', OfferController::class);
 Route::resource('lectures', LectureController::class);
 
 require __DIR__.'/auth.php';
