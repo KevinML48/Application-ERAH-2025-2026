@@ -7,6 +7,8 @@ use App\Http\Controllers\LectureController;
 use App\Http\Controllers\OfferController;
 use Inertia\Inertia;
 
+use App\Models\Offer;
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -29,5 +31,9 @@ Route::middleware('auth')->group(function () {
 // PAS DE MIDDLEWARE ICI, tout est dans les contrôleurs !
 Route::resource('offers', OfferController::class);
 Route::resource('lectures', LectureController::class);
+
+Route::get('/offers-json', function () {
+    return Offer::all();
+});
 
 require __DIR__.'/auth.php';
